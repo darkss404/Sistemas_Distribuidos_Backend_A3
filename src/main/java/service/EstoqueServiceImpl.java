@@ -1,0 +1,62 @@
+package service;
+
+import dao.CategoriaDAO;
+import dao.ProdutoDAO;
+import modelo.Categoria;
+import modelo.Produto;
+
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class EstoqueServiceImpl extends UnicastRemoteObject implements EstoqueService {
+    private final ProdutoDAO produtoDAO = new ProdutoDAO();
+    private final CategoriaDAO categoriaDAO = new CategoriaDAO();
+
+    public EstoqueServiceImpl() throws RemoteException {
+        super();
+    }
+
+    @Override
+    public void salvarProduto(Produto produto) throws RemoteException {
+        try {
+            boolean sucesso = produtoDAO.CadastrarProduto(produto);
+            if (!sucesso) {
+                throw new RemoteException("Erro ao cadastrar produto no banco.");
+            }
+        } catch (Exception e) {
+            throw new RemoteException("Falha ao salvar produto.", e);
+        }
+    }
+
+    @Override
+    public List<Produto> listarProdutos() throws RemoteException {
+        try {
+            // método retorna ArrayList, convertemos pra List
+            ArrayList<Produto> lista = produtoDAO.getMinhaListaProdutos();
+            return lista != null ? lista : new ArrayList<>();
+        } catch (Exception e) {
+            throw new RemoteException("Erro ao listar produtos.", e);
+        }
+    }
+
+    @Override
+    public void salvarCategoria(Categoria categoria) throws RemoteException {
+        try {
+            categoriaDAO.salvar(categoria);
+        } catch (SQLException e) {
+            throw new RemoteException("Erro ao salvar categoria.", e);
+        }
+    }
+
+    @Override
+    public List<Categoria> listarCategorias() throws RemoteException {
+        try {
+            return categoriaDAO.listarCategorias();
+        } catch (SQLException e) {
+            throw new RemoteException("Erro ao listar categorias.", e);
+        }
+    }
+}
