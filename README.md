@@ -1,6 +1,7 @@
-# Controle de Estoque A3
+# Backend da A3 sobre sistema de estoque distribuido
 
-Projeto desenvolvido para a disciplina **Programação de Soluções Computacionais** da **UNISUL**, com o objetivo de aplicar conceitos de programação, modelagem de software e controle de versionamento colaborativo no **GitHub**.
+Projeto desenvolvido para a disciplina **sistemas distribuidos** da **UNISUL**, com o objetivo de aplicar conceitos de programação distribuída utilizando RMI no **GitHub**.
+link do front:https://github.com/darkss404/Sistemas_Distribuidos_Frontend_A3
 
 ## 📦 Descrição
 
@@ -82,25 +83,13 @@ O sistema de Controle de Estoque permite gerenciar produtos de uma empresa comer
 - **RNF004.1:** O sistema deve ser **simples, funcional e de fácil uso** para qualquer usuário.
 - **RNF004.2:** A interface gráfica deve ser **clara, intuitiva** e adequada ao fluxo de trabalho.
 
-
-## 🎓 Objetivos Acadêmicos
-
-Este projeto visa:
-
-- Aplicar conceitos de modelagem de sistemas
-- Trabalhar com padrões de projeto (DAO)
-- Usar controle de versão em equipe (Git/GitHub)
-- Praticar o desenvolvimento colaborativo
-- Desenvolver um sistema funcional com interface gráfica
-
 ## 👥 Equipe
 
 | Nome do Aluno                    | Usuário Github  | RA do Aluno |
 |----------------------------------|-----------------|-------------|
-| Gustavo Abrahão de Melo Carvalho | @gustavoabrahao | 1072511496  |
-| Carlos Eduardo Weiss             | @CarlosEduWeiss | 1072519046  |
-| Bernardo Mendonça Santiago       | @bnsant         | 10725116225 |
-| Roger Porton Kuntze              | @rogerpk        | 10725118527 |
+| Iago Bastos de Oliveira          | @ioliveira01    | 1073513349  |
+| Pedro henrique antunes gonçalves | @darkss404      | 10725111381 |
+| Hector Dartagnan Viana de Brum   | @Eudarta        | 10725116554 |
 | Gabriel González Mattos          | @gabinhogmtts   | 1072517870  |
 
 ## 📌 Requisitos para Rodar o Projeto
@@ -116,4 +105,3 @@ Este projeto visa:
 
 ## 🎥 Apresentação
 
-Link para o vídeo da apresentação: ...
