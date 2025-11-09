@@ -67,4 +67,13 @@ public class EstoqueServiceImpl extends UnicastRemoteObject implements EstoqueSe
             throw new RemoteException("Erro ao listar categorias.", e);
         }
     }
+@Override
+public void excluirCategoria(int id) throws RemoteException {
+    try {
+        CategoriaDAO dao = new CategoriaDAO();
+        dao.excluir(id);
+    } catch (Exception e) {
+        throw new RemoteException("Erro ao excluir categoria: " + e.getMessage(), e);
+    }
+}
 }

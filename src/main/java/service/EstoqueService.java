@@ -13,6 +13,7 @@ public interface EstoqueService extends Remote {
 
     void salvarCategoria(Categoria categoria) throws RemoteException;
     List<Categoria> listarCategorias() throws RemoteException;
+    void excluirCategoria(int id) throws RemoteException;
     
     Produto buscarProdutoPorId(int id) throws RemoteException;
 }
