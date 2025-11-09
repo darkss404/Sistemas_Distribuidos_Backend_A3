@@ -8,7 +8,7 @@ public class Servidor {
         try {
             Registry registro = LocateRegistry.createRegistry(1099);
             registro.rebind("EstoqueService", new EstoqueServiceImpl());
-            System.out.println("✅ Servidor RMI ativo na porta 1099...");
+            System.out.println("Servidor RMI ativo na porta 1099...");
         } catch (Exception e) {
             e.printStackTrace();
         }

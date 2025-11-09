@@ -4,7 +4,6 @@ import dao.CategoriaDAO;
 import dao.ProdutoDAO;
 import modelo.Categoria;
 import modelo.Produto;
-
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.SQLException;
@@ -12,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EstoqueServiceImpl extends UnicastRemoteObject implements EstoqueService {
+
     private final ProdutoDAO produtoDAO = new ProdutoDAO();
     private final CategoriaDAO categoriaDAO = new CategoriaDAO();
 
@@ -34,11 +34,19 @@ public class EstoqueServiceImpl extends UnicastRemoteObject implements EstoqueSe
     @Override
     public List<Produto> listarProdutos() throws RemoteException {
         try {
-            // método retorna ArrayList, convertemos pra List
             ArrayList<Produto> lista = produtoDAO.getMinhaListaProdutos();
             return lista != null ? lista : new ArrayList<>();
         } catch (Exception e) {
             throw new RemoteException("Erro ao listar produtos.", e);
+        }
+    }
+
+    @Override
+    public Produto buscarProdutoPorId(int id) throws RemoteException {
+        try {
+            return produtoDAO.ProcurarProdutoID(id);
+        } catch (Exception e) {
+            throw new RemoteException("Erro ao buscar produto por ID.", e);
         }
     }
 
