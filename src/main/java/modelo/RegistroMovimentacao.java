@@ -1,9 +1,10 @@
 
 package modelo;
 
+import java.io.Serializable;
 
-public class RegistroMovimentacao {
-    
+public class RegistroMovimentacao implements Serializable {
+    private static final long serialVersionUID = 1L;
     private int id;
     private int produtoId;
     private String tipoMovimentacao;

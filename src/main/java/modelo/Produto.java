@@ -1,9 +1,10 @@
 package modelo;
+
 import java.util.ArrayList;
-import dao.ProdutoDAO;
+import java.io.Serializable;
 
-
-public class Produto{
+public class Produto implements Serializable{
+    private static final long serialVersionUID = 1L;
     private int id;
     private String nome;
     private String unidade;
@@ -12,7 +13,6 @@ public class Produto{
     private int min;
     private int max;
     private String categoria;
-    private ProdutoDAO dao;
 
     public Produto() {
         this(0,"","",0.0,0,0,1000,"");
@@ -27,7 +27,6 @@ public class Produto{
         this.min = min;
         this.max = max;
         this.categoria = categoria;
-        dao = new ProdutoDAO();
     }
     
 
@@ -145,39 +144,6 @@ public class Produto{
             System.out.println("Erro: Aa quantidade de saída deve ser maior que zero.");
         }
         
-    }
-    
-    public boolean RegistrarProduto(String nome,String unidade,double preco,int quantidade,int min, int max,String categoria){
-        int id = dao.MaiorID()+1;
-        
-        Produto NovoProduto = new Produto(id,nome,unidade, preco,quantidade,min,max,categoria);
-        
-        dao.CadastrarProduto(NovoProduto);
-        return true;
-        
-        
-    }
-    public boolean AtualizarProduto(int id, String nome,String unidade, double preco,int quantidade, int min, int max, String categoria){
-        Produto ProdutoAtualizado = new Produto(id,nome,unidade,preco,quantidade,min,max,categoria);
-        dao.AtualizarProduto(ProdutoAtualizado);
-        return true;
-    }
-    public boolean DeletarProduto(int id){
-        return dao.DeletarProdutoID(id);
-        
-    }
-    public Produto ProcurarProdutoId(int id){
-        return dao.ProcurarProdutoID(id);
-        
-    }
-    public Produto ProcurarProdutoNome(String nome){
-        return dao.ProcurarProdutoNome(nome);
-        
-    }
-    public ArrayList<Produto>getMinhaLista(){
-        return dao.getMinhaListaProdutos();
-        
-    }
-            
+    }     
 }
 
