@@ -30,6 +30,17 @@ public class EstoqueServiceImpl extends UnicastRemoteObject implements EstoqueSe
             throw new RemoteException("Falha ao salvar produto.", e);
         }
     }
+    @Override
+public void DeletarProdutoID(Produto produto) throws RemoteException {
+    try {
+        boolean sucesso = produtoDAO.DeletarProdutoID(produto.getId());
+        if (!sucesso) {
+            throw new RemoteException("Erro ao excluir produto do banco.");
+        }
+    } catch (Exception e) {
+        throw new RemoteException("Falha ao excluir produto: " + e.getMessage(), e);
+    }
+}
 
     @Override
     public List<Produto> listarProdutos() throws RemoteException {
