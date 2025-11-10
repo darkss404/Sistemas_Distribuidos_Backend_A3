@@ -35,6 +35,15 @@ public class EstoqueServiceImpl extends UnicastRemoteObject implements EstoqueSe
     }
 
     @Override
+    public boolean DeletarProdutoID(int idProduto) throws RemoteException {
+        try {
+            return produtoDAO.DeletarProdutoID(idProduto);
+        } catch (Exception e) {
+            throw new RemoteException("Erro ao excluir produto: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
     public List<Produto> listarProdutos() throws RemoteException {
         try {
             ArrayList<Produto> lista = produtoDAO.getMinhaListaProdutos();
@@ -50,24 +59,6 @@ public class EstoqueServiceImpl extends UnicastRemoteObject implements EstoqueSe
             return produtoDAO.ProcurarProdutoID(id);
         } catch (Exception e) {
             throw new RemoteException("Erro ao buscar produto por ID.", e);
-        }
-    }
-
-    @Override
-    public void salvarCategoria(Categoria categoria) throws RemoteException {
-        try {
-            categoriaDAO.salvar(categoria);
-        } catch (SQLException e) {
-            throw new RemoteException("Erro ao salvar categoria.", e);
-        }
-    }
-
-    @Override
-    public List<Categoria> listarCategorias() throws RemoteException {
-        try {
-            return categoriaDAO.listarCategorias();
-        } catch (SQLException e) {
-            throw new RemoteException("Erro ao listar categorias.", e);
         }
     }
 
@@ -99,20 +90,20 @@ public class EstoqueServiceImpl extends UnicastRemoteObject implements EstoqueSe
     }
 
     @Override
-    public List<RegistroMovimentacao> listarMovimentacoes() throws RemoteException {
+    public void salvarCategoria(Categoria categoria) throws RemoteException {
         try {
-            return registroDAO.listarTodasMovimentacoes();
-        } catch (Exception e) {
-            throw new RemoteException("Erro ao listar movimentações", e);
+            categoriaDAO.salvar(categoria);
+        } catch (SQLException e) {
+            throw new RemoteException("Erro ao salvar categoria.", e);
         }
     }
 
     @Override
-    public boolean DeletarProdutoID(int id) throws RemoteException {
+    public List<Categoria> listarCategorias() throws RemoteException {
         try {
-            return produtoDAO.DeletarProdutoID(id);
-        } catch (Exception e) {
-            throw new RemoteException("Erro ao deletar produto por ID.", e);
+            return categoriaDAO.listarCategorias();
+        } catch (SQLException e) {
+            throw new RemoteException("Erro ao listar categorias.", e);
         }
     }
 
@@ -124,5 +115,13 @@ public class EstoqueServiceImpl extends UnicastRemoteObject implements EstoqueSe
             throw new RemoteException("Erro ao excluir categoria.", e);
         }
     }
- }
-    
+
+    @Override
+    public List<RegistroMovimentacao> listarMovimentacoes() throws RemoteException {
+        try {
+            return registroDAO.listarTodasMovimentacoes();
+        } catch (Exception e) {
+            throw new RemoteException("Erro ao listar movimentações", e);
+        }
+    }
+}

@@ -9,7 +9,7 @@ import modelo.RegistroMovimentacao;
 
 public interface EstoqueService extends Remote {
 
-     void salvarProduto(Produto produto) throws RemoteException;
+    void salvarProduto(Produto produto) throws RemoteException;
 
     boolean DeletarProdutoID(int id) throws RemoteException;
     List<Produto> listarProdutos() throws RemoteException;
