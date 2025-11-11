@@ -74,18 +74,38 @@ public class EstoqueServiceImpl extends UnicastRemoteObject implements EstoqueSe
     @Override
     public boolean registrarEntradaProduto(int idProduto, int quantidade) throws RemoteException {
         try {
-            return produtoDAO.RegistrarEntradaProduto(idProduto, quantidade, "");
+            // Usar o método corrigido do ProdutoDAO que registra na tabela de movimentação
+            boolean sucesso = produtoDAO.RegistrarEntradaProduto(idProduto, quantidade, "Entrada via sistema");
+
+            if (sucesso) {
+                System.out.println("Entrada registrada com sucesso para produto ID: " + idProduto);
+                return true;
+            } else {
+                System.out.println("Falha ao registrar entrada para produto ID: " + idProduto);
+                return false;
+            }
+
         } catch (Exception e) {
-            throw new RemoteException("Erro ao registrar entrada", e);
+            throw new RemoteException("Erro ao registrar entrada: " + e.getMessage(), e);
         }
     }
 
     @Override
     public boolean registrarSaidaProduto(int idProduto, int quantidade) throws RemoteException {
         try {
-            return produtoDAO.RegistrarSaidaProduto(idProduto, quantidade, "");
+            // Usar o método corrigido do ProdutoDAO que registra na tabela de movimentação
+            boolean sucesso = produtoDAO.RegistrarSaidaProduto(idProduto, quantidade, "Saída via sistema");
+
+            if (sucesso) {
+                System.out.println("Saída registrada com sucesso para produto ID: " + idProduto);
+                return true;
+            } else {
+                System.out.println("Falha ao registrar saída para produto ID: " + idProduto);
+                return false;
+            }
+
         } catch (Exception e) {
-            throw new RemoteException("Erro ao registrar saída", e);
+            throw new RemoteException("Erro ao registrar saída: " + e.getMessage(), e);
         }
     }
 
@@ -121,7 +141,7 @@ public class EstoqueServiceImpl extends UnicastRemoteObject implements EstoqueSe
         try {
             return registroDAO.listarTodasMovimentacoes();
         } catch (Exception e) {
-            throw new RemoteException("Erro ao listar movimentações", e);
+            throw new RemoteException("Erro ao listar movimentações: " + e.getMessage(), e);
         }
     }
 }

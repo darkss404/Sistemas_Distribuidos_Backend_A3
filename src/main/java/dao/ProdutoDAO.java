@@ -12,7 +12,8 @@ import java.util.List;
 
 public class ProdutoDAO {
     ArrayList<Produto>minhaLista = new ArrayList();
-//Função para cadastrar um novo produto.
+
+    //Função para cadastrar um novo produto.
     public boolean CadastrarProduto(Produto produto) {
         Conexao conexao = new Conexao();
         try (Connection conn = conexao.conectar()) {
@@ -37,7 +38,8 @@ public class ProdutoDAO {
             return false;
         }
     }
-//Função para procurar um produto a partir do id
+
+    //Função para procurar um produto a partir do id
     public Produto ProcurarProdutoID(int id) {
         Conexao conexao = new Conexao();
         Produto produto = new Produto();
@@ -64,7 +66,8 @@ public class ProdutoDAO {
 
         return produto;
     }
-//Função para procurar um produto no banco de dados a partir do nome.
+
+    //Função para procurar um produto no banco de dados a partir do nome.
     public Produto ProcurarProdutoNome(String nome) {
         Conexao conexao = new Conexao();
         Produto produto = new Produto();
@@ -94,32 +97,34 @@ public class ProdutoDAO {
 
         return produto;
     }
-//função para atualizar um produto já existente.
- public boolean AtualizarProduto(Produto produto) {
-    String sql = "UPDATE produto SET nome=?, unidade=?, quantidade=?, preco=?, min=?, max=?, categoria=? WHERE id=?";
-    Conexao conexao = new Conexao();
 
-    try (Connection conn = conexao.conectar()) {
-        PreparedStatement stmt = conn.prepareStatement(sql);
-        stmt.setString(1, produto.getNome());
-        stmt.setString(2, produto.getUnidade());
-        stmt.setInt(3, produto.getQuantidade());
-        stmt.setDouble(4, produto.getPreco());
-        stmt.setInt(5, produto.getMin());
-        stmt.setInt(6, produto.getMax());
-        stmt.setString(7, produto.getCategoria());
-        stmt.setInt(8, produto.getId());
-        stmt.executeUpdate();
-        stmt.close();
+    //função para atualizar um produto já existente.
+    public boolean AtualizarProduto(Produto produto) {
+        String sql = "UPDATE produto SET nome=?, unidade=?, quantidade=?, preco=?, min=?, max=?, categoria=? WHERE id=?";
+        Conexao conexao = new Conexao();
 
-        System.out.println("Produto atualizado com sucesso!");
-        return true;
-    } catch (SQLException erro) {
-        System.out.println("Erro ao atualizar produto: " + erro.getMessage());
-        return false;
+        try (Connection conn = conexao.conectar()) {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, produto.getNome());
+            stmt.setString(2, produto.getUnidade());
+            stmt.setInt(3, produto.getQuantidade());
+            stmt.setDouble(4, produto.getPreco());
+            stmt.setInt(5, produto.getMin());
+            stmt.setInt(6, produto.getMax());
+            stmt.setString(7, produto.getCategoria());
+            stmt.setInt(8, produto.getId());
+            stmt.executeUpdate();
+            stmt.close();
+
+            System.out.println("Produto atualizado com sucesso!");
+            return true;
+        } catch (SQLException erro) {
+            System.out.println("Erro ao atualizar produto: " + erro.getMessage());
+            return false;
+        }
     }
-}   
-//função para deletar um produto a partir do id dele.
+
+    //função para deletar um produto a partir do id dele.
     public boolean DeletarProdutoID(int id) {
         Conexao conexao = new Conexao();
 
@@ -136,16 +141,14 @@ public class ProdutoDAO {
         }
     }
 
-    
     public ArrayList<Produto>getMinhaListaProdutos() {
-        
         minhaLista.clear();
         Conexao conexao = new Conexao();
-        
+
         try(Connection conn = conexao.conectar()){
-            Statement stmt = conn.createStatement();          
+            Statement stmt = conn.createStatement();
             ResultSet res = stmt.executeQuery("SELECT * FROM produto");
-            
+
             while(res.next()){
                 int id = res.getInt("id");
                 String nome = res.getString("nome");
@@ -155,39 +158,38 @@ public class ProdutoDAO {
                 int min = res.getInt("min");
                 int max = res.getInt("max");
                 String categoria = res.getString("categoria");
-                
+
                 Produto produto = new Produto(id,nome,unidade,preco,quantidade,min,max,categoria);
                 minhaLista.add(produto);
-}
-                
-                res.close();
-                stmt.close();
+            }
 
-            }catch(SQLException ex){
-                    System.out.println("Erro: "+ex);
-                    }
-            return minhaLista;
+            res.close();
+            stmt.close();
+
+        } catch(SQLException ex){
+            System.out.println("Erro: "+ex);
+        }
+        return minhaLista;
     }
- 
 
     public int MaiorID(){
-       Conexao conexao = new Conexao();
+        Conexao conexao = new Conexao();
         int MaiorID = 0;
-        
+
         try(Connection conn = conexao.conectar()){
             Statement stmt = conn.createStatement();
             ResultSet res = stmt.executeQuery("SELECT MAX(id) id from produto");
             res.next();
             MaiorID = res.getInt("id");
             stmt.close();
-                
-        
-    }catch(SQLException ex){
-        System.out.println("Erro: "+ex);
-    }
+
+        } catch(SQLException ex){
+            System.out.println("Erro: "+ex);
+        }
         return MaiorID;
     }
-       public ArrayList<String> buscarCategorias() {
+
+    public ArrayList<String> buscarCategorias() {
         ArrayList<String> lista = new ArrayList<>();
         Conexao conexao = new Conexao();
 
@@ -205,32 +207,34 @@ public class ProdutoDAO {
 
         return lista;
     }
-       public List<Produto> buscarPorCategoria(String categoria) throws SQLException { // pra filtrar por categoria
-    List<Produto> lista = new ArrayList<>();
-    String sql = "SELECT * FROM produto WHERE categoria = ?";
 
-    try (
-            Connection conn = new Conexao().conectar(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-        stmt.setString(1, categoria);
-        ResultSet rs = stmt.executeQuery();
+    public List<Produto> buscarPorCategoria(String categoria) throws SQLException {
+        List<Produto> lista = new ArrayList<>();
+        String sql = "SELECT * FROM produto WHERE categoria = ?";
 
-        while (rs.next()) {
-        Produto p = new Produto(
-          rs.getInt("id"),
-          rs.getString("nome"),
-          rs.getString("unidade"),
-          rs.getDouble("preco"),
-          rs.getInt("quantidade"),
-          rs.getInt("min"),
-          rs.getInt("max"),
-          rs.getString("categoria")             
-      );
-            lista.add(p);
+        try (Connection conn = new Conexao().conectar();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, categoria);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Produto p = new Produto(
+                        rs.getInt("id"),
+                        rs.getString("nome"),
+                        rs.getString("unidade"),
+                        rs.getDouble("preco"),
+                        rs.getInt("quantidade"),
+                        rs.getInt("min"),
+                        rs.getInt("max"),
+                        rs.getString("categoria")
+                );
+                lista.add(p);
+            }
         }
+        return lista;
     }
-    return lista;
-       }
-       public List<Produto> buscarPorNome(String nome) throws SQLException { // esse aqui é pra buscar por nome
+
+    public List<Produto> buscarPorNome(String nome) throws SQLException {
         List<Produto> lista = new ArrayList<>();
         String sql = "SELECT * FROM produto WHERE nome LIKE ?";
         try (Connection conn = new Conexao().conectar(); PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -252,7 +256,8 @@ public class ProdutoDAO {
         }
         return lista;
     }
-       public List<Produto> buscarPorNomeECategoria(String nome, String categoria) throws SQLException { // esse é por nome + categoria
+
+    public List<Produto> buscarPorNomeECategoria(String nome, String categoria) throws SQLException {
         List<Produto> lista = new ArrayList<>();
         String sql = "SELECT * FROM produto WHERE nome LIKE ? AND categoria = ?";
         try (Connection conn = new Conexao().conectar(); PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -275,160 +280,93 @@ public class ProdutoDAO {
         }
         return lista;
     }
-       public boolean RegistrarEntradaProduto(int produtoId, int quantidadeEntrada, String observacao){
-           Conexao conexao = new Conexao();
-           Produto produto = ProcurarProdutoID(produtoId);
-           
-           if(produto.getId() == 0){
-               return false;
-           }
-           
-           try(Connection conn = conexao.conectar()){
-               conn.setAutoCommit(false);
-               
-               String sqlUpdateProduto = "UPDATE produto SET quantidade = quantidade + ? WHERE id = ?";
-               try(PreparedStatement stmtUpdate = conn.prepareStatement(sqlUpdateProduto)){
-                   stmtUpdate.setInt(1, quantidadeEntrada);
-                   stmtUpdate.setInt(2, produtoId);
-                   int linhasAfetadas = stmtUpdate.executeUpdate();
-                   
-                   if(linhasAfetadas == 0){
-                       conn.rollback();
-                       return false;
-                   }
-               }conn.commit();
-               return true;
-               
-                    
-           }catch (SQLException e){
-               System.out.println("erro: "+e);
-           }return false;
-           
-           
-       }
-       public boolean RegistrarSaidaProduto(int produtoId, int quantidadeSaida,String observacao){
-           Conexao conexao = new Conexao();
-           Produto produto = ProcurarProdutoID(produtoId);
-           
-           if(produto.getId() == 0){
-               return false;
-           }
-           if(produto.getQuantidade() < quantidadeSaida)
-               if (produto.getQuantidade() < quantidadeSaida) {
-                   System.out.println("Quantidade insuficiente.");
-                   return false;
-               }
-           
-           try(Connection conn = conexao.conectar()){
-               conn.setAutoCommit(false);
-               
-               String sqlUpdateProduto = "UPDATE produto SET quantidade = quantidade - ? WHERE id = ?";
-               try(PreparedStatement stmtUpdate = conn.prepareStatement(sqlUpdateProduto)){
-                   stmtUpdate.setInt(1, quantidadeSaida);
-                   stmtUpdate.setInt(2, produtoId);
-                   int linhasAfetadas = stmtUpdate.executeUpdate();
-                   
-                   if(linhasAfetadas == 0){
-                       conn.rollback();
-                       return false;
-                   }
-               }conn.commit();
-               return true;
-               
-                    
-           }catch (SQLException e){
-               System.out.println("erro: "+e);
-           }return false;
-           
-       }
-       
-     public void atualizarPreco(int idProduto, double novoPreco) throws SQLException {
-        String sql = "UPDATE produto SET preco = ? WHERE id = ?";
-        try (
-                Connection conn = new Conexao().conectar(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setDouble(1, novoPreco);
-            stmt.setInt(2, idProduto);
-            stmt.executeUpdate();
-        }
-    }
-     public List<Produto> listarProdutoOrdenadoPorNome(){
-         
-         String sql = "SELECT * FROM produto ORDER BY nome ASC";
-         
-         List<Produto> listaDeProdutos = new ArrayList<>();
-         try(Connection conn = new Conexao().conectar();
-                 PreparedStatement stmt = conn.prepareStatement(sql);
-                 ResultSet rs = stmt.executeQuery()){
-             
-             while (rs.next()){
-                 
-                 int id = rs.getInt("id");
-                 String nome = rs.getString("nome");
-                 String unidade = rs.getString("unidade");
-                 double preco = rs.getDouble("preco");
-                 int quantidade = rs.getInt("quantidade");
-                 int min = rs.getInt("min");
-                 int max = rs.getInt("max");
-                 String categoria = rs.getString("categoria");
-                 
-                 Produto produto = new Produto(id, nome, unidade, preco, quantidade, min, max, categoria);
-                 
-                 listaDeProdutos.add(produto);
-             }
-             
-         }catch (SQLException e){
-             System.out.println("Erro ao buscar a lista de produtos ordenada: "+ e.getMessage());
-         }
-         return listaDeProdutos;
-     }
-     
-         public List<Produto> listarProdutosAbaixoMinMax() {
-        List<Produto> lista = new ArrayList<>();
-        String sql = "SELECT * FROM produto WHERE quantidade < min OR quantidade > max";
 
-        try (Connection conn = new Conexao().conectar(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
+    // MÉTODO CORRIGIDO - REGISTRAR ENTRADA
+    public boolean RegistrarEntradaProduto(int produtoId, int quantidadeEntrada, String observacao) {
+        Conexao conexao = new Conexao();
 
-            while (rs.next()) {
-                Produto produto = new Produto(
-                        rs.getInt("id"),
-                        rs.getString("nome"),
-                        rs.getString("unidade"),
-                        rs.getDouble("preco"),
-                        rs.getInt("quantidade"),
-                        rs.getInt("min"),
-                        rs.getInt("max"),
-                        rs.getString("categoria")
-                );
-                lista.add(produto);
+        try (Connection conn = conexao.conectar()) {
+            conn.setAutoCommit(false); // Iniciar transação
+
+            // 1. Atualizar quantidade do produto
+            String sqlUpdateProduto = "UPDATE produto SET quantidade = quantidade + ? WHERE id = ?";
+            try (PreparedStatement stmtUpdate = conn.prepareStatement(sqlUpdateProduto)) {
+                stmtUpdate.setInt(1, quantidadeEntrada);
+                stmtUpdate.setInt(2, produtoId);
+                int linhasAfetadas = stmtUpdate.executeUpdate();
+
+                if (linhasAfetadas == 0) {
+                    conn.rollback();
+                    return false;
+                }
             }
 
-        } catch (SQLException e) {
-            System.out.println("Erro ao listar produtos abaixo do min/max: " + e.getMessage());
-        }
-
-        return lista;
-    }
-    public List<String[]> listarQuantidadePorCategoria() {
-        List<String[]> lista = new ArrayList<>();
-        String sql = "SELECT categoria, COUNT(*) AS total FROM produto GROUP BY categoria ORDER BY categoria";
-
-        try (Connection conn = new Conexao().conectar(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
-
-            while (rs.next()) {
-                String categoria = rs.getString("categoria");
-                String total = String.valueOf(rs.getInt("total"));
-                lista.add(new String[]{categoria, total});
+            // 2. Registrar na tabela de movimentação
+            String sqlInsertMovimentacao = "INSERT INTO registro_movimentacao (produto_id, tipo_movimentacao, quantidade, observacao, data_movimentacao) VALUES (?, 'Entrada', ?, ?, CURDATE())";
+            try (PreparedStatement stmtMovimentacao = conn.prepareStatement(sqlInsertMovimentacao)) {
+                stmtMovimentacao.setInt(1, produtoId);
+                stmtMovimentacao.setInt(2, quantidadeEntrada);
+                stmtMovimentacao.setString(3, observacao);
+                stmtMovimentacao.executeUpdate();
             }
 
+            conn.commit(); // Confirmar transação
+            System.out.println("Entrada registrada com sucesso para produto ID: " + produtoId);
+            return true;
+
         } catch (SQLException e) {
-            System.out.println("Erro ao contar produtos por categoria: " + e.getMessage());
+            System.out.println("Erro ao registrar entrada: " + e.getMessage());
+            return false;
+        }
+    }
+
+
+    public boolean RegistrarSaidaProduto(int produtoId, int quantidadeSaida, String observacao) {
+        Conexao conexao = new Conexao();
+        Produto produto = ProcurarProdutoID(produtoId);
+
+        if (produto.getId() == 0) {
+            System.out.println("Produto não encontrado: ID " + produtoId);
+            return false;
         }
 
-        return lista;
+        if (produto.getQuantidade() < quantidadeSaida) {
+            System.out.println("Quantidade insuficiente para produto: " + produto.getNome());
+            return false;
+        }
+
+        try (Connection conn = conexao.conectar()) {
+            conn.setAutoCommit(false); // Iniciar transação
+
+            // 1. Atualizar quantidade do produto
+            String sqlUpdateProduto = "UPDATE produto SET quantidade = quantidade - ? WHERE id = ?";
+            try (PreparedStatement stmtUpdate = conn.prepareStatement(sqlUpdateProduto)) {
+                stmtUpdate.setInt(1, quantidadeSaida);
+                stmtUpdate.setInt(2, produtoId);
+                int linhasAfetadas = stmtUpdate.executeUpdate();
+
+                if (linhasAfetadas == 0) {
+                    conn.rollback();
+                    return false;
+                }
+            }
+
+            // 2. Registrar na tabela de movimentação
+            String sqlInsertMovimentacao = "INSERT INTO registro_movimentacao (produto_id, tipo_movimentacao, quantidade, observacao, data_movimentacao) VALUES (?, 'Saída', ?, ?, CURDATE())";
+            try (PreparedStatement stmtMovimentacao = conn.prepareStatement(sqlInsertMovimentacao)) {
+                stmtMovimentacao.setInt(1, produtoId);
+                stmtMovimentacao.setInt(2, quantidadeSaida);
+                stmtMovimentacao.setString(3, observacao);
+                stmtMovimentacao.executeUpdate();
+            }
+
+            conn.commit(); // Confirmar transação
+            System.out.println("Saída registrada com sucesso para produto ID: " + produtoId);
+            return true;
+
+        } catch (SQLException e) {
+            System.out.println("Erro ao registrar saída: " + e.getMessage());
+            return false;
+        }
     }
 }
-       
-       
-
-
-    

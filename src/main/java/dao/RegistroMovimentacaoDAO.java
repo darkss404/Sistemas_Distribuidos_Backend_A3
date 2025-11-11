@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,34 +19,40 @@ public class RegistroMovimentacaoDAO {
 
         try (Connection conn = conexao.conectar();
              PreparedStatement st = conn.prepareStatement(sql)) {
-            
+
+            // Usar a data do registro em vez de sempre a data atual
+            LocalDate dataMovimentacao = registro.getDataMovimentacao() != null ?
+                    LocalDate.parse(registro.getDataMovimentacao()) : LocalDate.now();
+
             System.out.println("Inserindo movimentação no banco...");
             System.out.println("Produto ID: " + registro.getProdutoId());
             System.out.println("Tipo: " + registro.getTipoMovimentacao());
             System.out.println("Quantidade: " + registro.getQuantidade());
-            System.out.println("Data: " + registro.getDataMovimentacao());
+            System.out.println("Data: " + dataMovimentacao);
 
             st.setInt(1, registro.getProdutoId());
             st.setString(2, registro.getTipoMovimentacao());
             st.setInt(3, registro.getQuantidade());
             st.setString(4, registro.getObservacao());
-            st.setDate(5, java.sql.Date.valueOf(LocalDate.now()));
+            st.setDate(5, java.sql.Date.valueOf(dataMovimentacao));
 
-            st.execute();
-            return true;
+            int rowsAffected = st.executeUpdate();
+            conn.commit(); // Adicionar commit explícito
+
+            System.out.println("Registro inserido com sucesso. Linhas afetadas: " + rowsAffected);
+            return rowsAffected > 0;
+
         } catch (SQLException e) {
             System.err.println("Erro ao registrar movimentação no banco de dados: " + e.getMessage());
+            e.printStackTrace();
             return false;
-            
-   
         }
- 
     }
 
     public List<RegistroMovimentacao> listarTodasMovimentacoes() {
         List<RegistroMovimentacao> listaMovimentacoes = new ArrayList<>();
         Conexao conexao = new Conexao();
-        String sql = "SELECT id, produto_id, tipo_movimentacao, quantidade, observacao, data_movimentacao FROM registro_movimentacao ORDER BY id DESC";
+        String sql = "SELECT id, produto_id, tipo_movimentacao, quantidade, observacao, data_movimentacao FROM registro_movimentacao ORDER BY data_movimentacao DESC, id DESC";
 
         try (Connection conn = conexao.conectar();
              Statement stmt = conn.createStatement();
@@ -57,8 +64,8 @@ public class RegistroMovimentacaoDAO {
                 String tipoMovimentacao = rs.getString("tipo_movimentacao");
                 int quantidade = rs.getInt("quantidade");
                 String observacao = rs.getString("observacao");
-                String dataMovimentacao = rs.getString("data_movimentacao"); 
-
+                java.sql.Date sqlDate = rs.getDate("data_movimentacao");
+                String dataMovimentacao = sqlDate != null ? sqlDate.toLocalDate().toString() : LocalDate.now().toString();
 
                 RegistroMovimentacao registro = new RegistroMovimentacao(
                         id, produtoId, tipoMovimentacao, quantidade, observacao, dataMovimentacao
@@ -67,6 +74,7 @@ public class RegistroMovimentacaoDAO {
             }
         } catch (SQLException e) {
             System.err.println("Erro ao listar movimentações: " + e.getMessage());
+            e.printStackTrace();
         }
         return listaMovimentacoes;
     }
@@ -74,7 +82,7 @@ public class RegistroMovimentacaoDAO {
     public List<RegistroMovimentacao> listarMovimentacoesPorProduto(int produtoId) {
         List<RegistroMovimentacao> listaMovimentacoes = new ArrayList<>();
         Conexao conexao = new Conexao();
-        String sql = "SELECT id, produto_id, tipo_movimentacao, quantidade, observacao FROM registro_movimentacao WHERE produto_id = ? ORDER BY id DESC";
+        String sql = "SELECT id, produto_id, tipo_movimentacao, quantidade, observacao, data_movimentacao FROM registro_movimentacao WHERE produto_id = ? ORDER BY data_movimentacao DESC, id DESC";
 
         try (Connection conn = conexao.conectar();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -86,7 +94,8 @@ public class RegistroMovimentacaoDAO {
                     String tipoMovimentacao = rs.getString("tipo_movimentacao");
                     int quantidade = rs.getInt("quantidade");
                     String observacao = rs.getString("observacao");
-                    String dataMovimentacao = rs.getString("data_movimentacao");
+                    java.sql.Date sqlDate = rs.getDate("data_movimentacao");
+                    String dataMovimentacao = sqlDate != null ? sqlDate.toLocalDate().toString() : LocalDate.now().toString();
 
                     RegistroMovimentacao registro = new RegistroMovimentacao(id, produtoId, tipoMovimentacao, quantidade, observacao, dataMovimentacao);
                     listaMovimentacoes.add(registro);
@@ -94,6 +103,7 @@ public class RegistroMovimentacaoDAO {
             }
         } catch (SQLException e) {
             System.err.println("Erro ao listar movimentações por produto: " + e.getMessage());
+            e.printStackTrace();
         }
         return listaMovimentacoes;
     }
