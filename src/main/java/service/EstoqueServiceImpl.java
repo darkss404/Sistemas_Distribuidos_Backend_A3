@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import modelo.RegistroMovimentacao;
 
-public class EstoqueServiceImpl extends UnicastRemoteObject implements EstoqueService {
+public class EstoqueServiceImpl extends UnicastRemoteObject implements EstoqueService, ProdutoService, CategoriaService, MovimentacaoService {
 
     private final ProdutoDAO produtoDAO = new ProdutoDAO();
     private final CategoriaDAO categoriaDAO = new CategoriaDAO();
@@ -21,6 +21,8 @@ public class EstoqueServiceImpl extends UnicastRemoteObject implements EstoqueSe
     public EstoqueServiceImpl() throws RemoteException {
         super();
     }
+
+    // ========== IMPLEMENTAÇÃO DE ProdutoService ==========
 
     @Override
     public void salvarProduto(Produto produto) throws RemoteException {
@@ -34,6 +36,7 @@ public class EstoqueServiceImpl extends UnicastRemoteObject implements EstoqueSe
         }
     }
 
+    // MÉTODO CORRIGIDO - MANTIDO O NOME ORIGINAL
     @Override
     public boolean DeletarProdutoID(int idProduto) throws RemoteException {
         try {
@@ -74,7 +77,6 @@ public class EstoqueServiceImpl extends UnicastRemoteObject implements EstoqueSe
     @Override
     public boolean registrarEntradaProduto(int idProduto, int quantidade) throws RemoteException {
         try {
-            // Usar o método corrigido do ProdutoDAO que registra na tabela de movimentação
             boolean sucesso = produtoDAO.RegistrarEntradaProduto(idProduto, quantidade, "Entrada via sistema");
 
             if (sucesso) {
@@ -93,7 +95,6 @@ public class EstoqueServiceImpl extends UnicastRemoteObject implements EstoqueSe
     @Override
     public boolean registrarSaidaProduto(int idProduto, int quantidade) throws RemoteException {
         try {
-            // Usar o método corrigido do ProdutoDAO que registra na tabela de movimentação
             boolean sucesso = produtoDAO.RegistrarSaidaProduto(idProduto, quantidade, "Saída via sistema");
 
             if (sucesso) {
@@ -108,6 +109,8 @@ public class EstoqueServiceImpl extends UnicastRemoteObject implements EstoqueSe
             throw new RemoteException("Erro ao registrar saída: " + e.getMessage(), e);
         }
     }
+
+    // ========== IMPLEMENTAÇÃO DE CategoriaService ==========
 
     @Override
     public void salvarCategoria(Categoria categoria) throws RemoteException {
@@ -136,12 +139,32 @@ public class EstoqueServiceImpl extends UnicastRemoteObject implements EstoqueSe
         }
     }
 
+    // ========== IMPLEMENTAÇÃO DE MovimentacaoService ==========
+
     @Override
     public List<RegistroMovimentacao> listarMovimentacoes() throws RemoteException {
         try {
             return registroDAO.listarTodasMovimentacoes();
         } catch (Exception e) {
             throw new RemoteException("Erro ao listar movimentações: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public boolean registrarMovimentacao(RegistroMovimentacao registro) throws RemoteException {
+        try {
+            return registroDAO.registrarMovimentacao(registro);
+        } catch (Exception e) {
+            throw new RemoteException("Erro ao registrar movimentação: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public List<RegistroMovimentacao> listarMovimentacoesPorProduto(int produtoId) throws RemoteException {
+        try {
+            return registroDAO.listarMovimentacoesPorProduto(produtoId);
+        } catch (Exception e) {
+            throw new RemoteException("Erro ao listar movimentações por produto: " + e.getMessage(), e);
         }
     }
 }
