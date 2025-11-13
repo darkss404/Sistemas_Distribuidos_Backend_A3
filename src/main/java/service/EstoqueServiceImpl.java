@@ -12,18 +12,58 @@ import java.util.ArrayList;
 import java.util.List;
 import modelo.RegistroMovimentacao;
 
+/**
+ * Implementação do serviço remoto de estoque que integra as funcionalidades de
+ * produtos, categorias e movimentações.
+ *
+ * Esta classe é responsável por gerenciar as operações do sistema de estoque
+ * através do RMI (Remote Method Invocation), servindo como ponte entre o
+ * cliente e os DAOs responsáveis pela persistência no banco de dados.
+ *
+ * Responsabilidades:
+ * Gerenciar produtos (CRUD e movimentações de entrada/saída).
+ * Gerenciar categorias de produtos.
+ * Registrar e listar movimentações de estoque.
+ *
+ *
+ * Implementa as interfaces:
+ * {@link ProdutoService}, {@link CategoriaService}, {@link MovimentacaoService}
+ * e {@link EstoqueService}.
+ *
+ * @author Hector
+ * @version 1.0
+ * @see ProdutoDAO
+ * @see CategoriaDAO
+ * @see RegistroMovimentacaoDAO
+ */
 public class EstoqueServiceImpl extends UnicastRemoteObject implements EstoqueService, ProdutoService, CategoriaService, MovimentacaoService {
 
+    /**
+     * DAO responsável pela manipulação dos dados de produtos.
+     */
     private final ProdutoDAO produtoDAO = new ProdutoDAO();
+    /**
+     * DAO responsável pela manipulação dos dados de categorias.
+     */
     private final CategoriaDAO categoriaDAO = new CategoriaDAO();
+    /**
+     * DAO responsável pelo registro e consulta de movimentações.
+     */
     private final RegistroMovimentacaoDAO registroDAO = new RegistroMovimentacaoDAO();
 
+    /**
+     * Construtor padrão que inicializa o serviço remoto de estoque.
+     *
+     * @throws RemoteException se ocorrer um erro ao exportar o objeto remoto.
+     */
     public EstoqueServiceImpl() throws RemoteException {
         super();
     }
 
-    // ========== IMPLEMENTAÇÃO DE ProdutoService ==========
-
+// ==================== IMPLEMENTAÇÃO DE ProdutoService ====================
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void salvarProduto(Produto produto) throws RemoteException {
         try {
@@ -37,6 +77,9 @@ public class EstoqueServiceImpl extends UnicastRemoteObject implements EstoqueSe
     }
 
     // MÉTODO CORRIGIDO - MANTIDO O NOME ORIGINAL
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean DeletarProdutoID(int idProduto) throws RemoteException {
         try {
@@ -46,6 +89,9 @@ public class EstoqueServiceImpl extends UnicastRemoteObject implements EstoqueSe
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Produto> listarProdutos() throws RemoteException {
         try {
@@ -56,6 +102,9 @@ public class EstoqueServiceImpl extends UnicastRemoteObject implements EstoqueSe
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Produto buscarProdutoPorId(int id) throws RemoteException {
         try {
@@ -65,6 +114,9 @@ public class EstoqueServiceImpl extends UnicastRemoteObject implements EstoqueSe
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Produto buscarProdutoPorNome(String nome) throws RemoteException {
         try {
@@ -74,6 +126,9 @@ public class EstoqueServiceImpl extends UnicastRemoteObject implements EstoqueSe
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean registrarEntradaProduto(int idProduto, int quantidade) throws RemoteException {
         try {
@@ -92,6 +147,9 @@ public class EstoqueServiceImpl extends UnicastRemoteObject implements EstoqueSe
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean registrarSaidaProduto(int idProduto, int quantidade) throws RemoteException {
         try {
@@ -110,8 +168,9 @@ public class EstoqueServiceImpl extends UnicastRemoteObject implements EstoqueSe
         }
     }
 
-    // ========== IMPLEMENTAÇÃO DE CategoriaService ==========
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void salvarCategoria(Categoria categoria) throws RemoteException {
         try {
@@ -121,6 +180,9 @@ public class EstoqueServiceImpl extends UnicastRemoteObject implements EstoqueSe
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Categoria> listarCategorias() throws RemoteException {
         try {
@@ -130,6 +192,9 @@ public class EstoqueServiceImpl extends UnicastRemoteObject implements EstoqueSe
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void excluirCategoria(int id) throws RemoteException {
         try {
@@ -139,8 +204,9 @@ public class EstoqueServiceImpl extends UnicastRemoteObject implements EstoqueSe
         }
     }
 
-    // ========== IMPLEMENTAÇÃO DE MovimentacaoService ==========
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<RegistroMovimentacao> listarMovimentacoes() throws RemoteException {
         try {
@@ -150,6 +216,9 @@ public class EstoqueServiceImpl extends UnicastRemoteObject implements EstoqueSe
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean registrarMovimentacao(RegistroMovimentacao registro) throws RemoteException {
         try {
@@ -159,6 +228,9 @@ public class EstoqueServiceImpl extends UnicastRemoteObject implements EstoqueSe
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<RegistroMovimentacao> listarMovimentacoesPorProduto(int produtoId) throws RemoteException {
         try {

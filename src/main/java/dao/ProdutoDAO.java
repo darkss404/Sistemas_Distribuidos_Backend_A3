@@ -10,10 +10,30 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Classe responsável por realizar operações de acesso ao banco de dados
+ * relacionadas à entidade {@link Produto}.
+ * Esta classe implementa os métodos CRUD (Create, Read, Update e Delete) e
+ * também funções de busca, filtragem e registro de movimentações de entrada e
+ * saída de produtos.
+ * @author Hector
+ * @version 1.0
+ */
 public class ProdutoDAO {
-    ArrayList<Produto>minhaLista = new ArrayList();
 
-    //Função para cadastrar um novo produto.
+    /**
+     * Lista temporária de produtos utilizada para armazenar resultados de
+     * consultas.
+     */
+    ArrayList<Produto> minhaLista = new ArrayList();
+
+    /**
+     * Cadastra um novo produto no banco de dados.
+     *
+     * @param produto objeto {@link Produto} a ser cadastrado
+     * @return {@code true} se o produto foi cadastrado com sucesso,
+     * {@code false} caso contrário
+     */
     public boolean CadastrarProduto(Produto produto) {
         Conexao conexao = new Conexao();
         try (Connection conn = conexao.conectar()) {
@@ -22,7 +42,7 @@ public class ProdutoDAO {
 
             st.setString(1, produto.getNome());
             st.setString(2, produto.getUnidade());
-            st.setInt(3,produto.getQuantidade());
+            st.setInt(3, produto.getQuantidade());
             st.setDouble(4, produto.getPreco());
             st.setInt(5, produto.getMin());
             st.setInt(6, produto.getMax());
@@ -39,7 +59,13 @@ public class ProdutoDAO {
         }
     }
 
-    //Função para procurar um produto a partir do id
+    /**
+     * Busca um produto pelo seu ID.
+     *
+     * @param id identificador único do produto
+     * @return o objeto {@link Produto} encontrado, ou um produto vazio se não
+     * existir
+     */
     public Produto ProcurarProdutoID(int id) {
         Conexao conexao = new Conexao();
         Produto produto = new Produto();
@@ -67,7 +93,13 @@ public class ProdutoDAO {
         return produto;
     }
 
-    //Função para procurar um produto no banco de dados a partir do nome.
+    /**
+     * Busca um produto pelo nome.
+     *
+     * @param nome nome exato do produto
+     * @return o objeto {@link Produto} encontrado, ou um produto vazio se não
+     * existir
+     */
     public Produto ProcurarProdutoNome(String nome) {
         Conexao conexao = new Conexao();
         Produto produto = new Produto();
@@ -98,7 +130,13 @@ public class ProdutoDAO {
         return produto;
     }
 
-    //função para atualizar um produto já existente.
+    /**
+     * Atualiza os dados de um produto existente.
+     *
+     * @param produto objeto {@link Produto} com os dados atualizados
+     * @return {@code true} se a atualização foi bem-sucedida, {@code false}
+     * caso contrário
+     */
     public boolean AtualizarProduto(Produto produto) {
         String sql = "UPDATE produto SET nome=?, unidade=?, quantidade=?, preco=?, min=?, max=?, categoria=? WHERE id=?";
         Conexao conexao = new Conexao();
@@ -124,7 +162,13 @@ public class ProdutoDAO {
         }
     }
 
-    //função para deletar um produto a partir do id dele.
+    /**
+     * Exclui um produto com base em seu ID.
+     *
+     * @param id identificador único do produto
+     * @return {@code true} se a exclusão foi bem-sucedida, {@code false} caso
+     * contrário
+     */
     public boolean DeletarProdutoID(int id) {
         Conexao conexao = new Conexao();
 
@@ -141,15 +185,20 @@ public class ProdutoDAO {
         }
     }
 
-    public ArrayList<Produto>getMinhaListaProdutos() {
+    /**
+     * Retorna uma lista com todos os produtos cadastrados.
+     *
+     * @return lista de objetos {@link Produto}
+     */
+    public ArrayList<Produto> getMinhaListaProdutos() {
         minhaLista.clear();
         Conexao conexao = new Conexao();
 
-        try(Connection conn = conexao.conectar()){
+        try (Connection conn = conexao.conectar()) {
             Statement stmt = conn.createStatement();
             ResultSet res = stmt.executeQuery("SELECT * FROM produto");
 
-            while(res.next()){
+            while (res.next()) {
                 int id = res.getInt("id");
                 String nome = res.getString("nome");
                 String unidade = res.getString("unidade");
@@ -159,36 +208,46 @@ public class ProdutoDAO {
                 int max = res.getInt("max");
                 String categoria = res.getString("categoria");
 
-                Produto produto = new Produto(id,nome,unidade,preco,quantidade,min,max,categoria);
+                Produto produto = new Produto(id, nome, unidade, preco, quantidade, min, max, categoria);
                 minhaLista.add(produto);
             }
 
             res.close();
             stmt.close();
 
-        } catch(SQLException ex){
-            System.out.println("Erro: "+ex);
+        } catch (SQLException ex) {
+            System.out.println("Erro: " + ex);
         }
         return minhaLista;
     }
 
-    public int MaiorID(){
+    /**
+     * Retorna o maior ID de produto registrado no banco de dados.
+     *
+     * @return o maior valor de ID encontrado
+     */
+    public int MaiorID() {
         Conexao conexao = new Conexao();
         int MaiorID = 0;
 
-        try(Connection conn = conexao.conectar()){
+        try (Connection conn = conexao.conectar()) {
             Statement stmt = conn.createStatement();
             ResultSet res = stmt.executeQuery("SELECT MAX(id) id from produto");
             res.next();
             MaiorID = res.getInt("id");
             stmt.close();
 
-        } catch(SQLException ex){
-            System.out.println("Erro: "+ex);
+        } catch (SQLException ex) {
+            System.out.println("Erro: " + ex);
         }
         return MaiorID;
     }
 
+    /**
+     * Retorna todas as categorias distintas cadastradas nos produtos.
+     *
+     * @return lista de nomes de categorias
+     */
     public ArrayList<String> buscarCategorias() {
         ArrayList<String> lista = new ArrayList<>();
         Conexao conexao = new Conexao();
@@ -208,12 +267,18 @@ public class ProdutoDAO {
         return lista;
     }
 
+    /**
+     * Busca produtos pertencentes a uma categoria específica.
+     *
+     * @param categoria nome da categoria
+     * @return lista de produtos da categoria informada
+     * @throws SQLException se ocorrer erro na execução da consulta
+     */
     public List<Produto> buscarPorCategoria(String categoria) throws SQLException {
         List<Produto> lista = new ArrayList<>();
         String sql = "SELECT * FROM produto WHERE categoria = ?";
 
-        try (Connection conn = new Conexao().conectar();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = new Conexao().conectar(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, categoria);
             ResultSet rs = stmt.executeQuery();
 
@@ -234,6 +299,13 @@ public class ProdutoDAO {
         return lista;
     }
 
+    /**
+     * Busca produtos cujo nome contenha o texto informado.
+     *
+     * @param nome parte do nome a ser pesquisada
+     * @return lista de produtos encontrados
+     * @throws SQLException se ocorrer erro na execução da consulta
+     */
     public List<Produto> buscarPorNome(String nome) throws SQLException {
         List<Produto> lista = new ArrayList<>();
         String sql = "SELECT * FROM produto WHERE nome LIKE ?";
@@ -257,6 +329,14 @@ public class ProdutoDAO {
         return lista;
     }
 
+    /**
+     * Busca produtos pelo nome e categoria simultaneamente.
+     *
+     * @param nome parte do nome do produto
+     * @param categoria categoria do produto
+     * @return lista de produtos que correspondem aos filtros
+     * @throws SQLException se ocorrer erro na execução da consulta
+     */
     public List<Produto> buscarPorNomeECategoria(String nome, String categoria) throws SQLException {
         List<Produto> lista = new ArrayList<>();
         String sql = "SELECT * FROM produto WHERE nome LIKE ? AND categoria = ?";
@@ -281,7 +361,16 @@ public class ProdutoDAO {
         return lista;
     }
 
-    // MÉTODO CORRIGIDO - REGISTRAR ENTRADA
+    /**
+     * Registra a entrada de um produto no estoque e grava a movimentação no
+     * banco de dados.
+     *
+     * @param produtoId ID do produto
+     * @param quantidadeEntrada quantidade adicionada
+     * @param observacao observação opcional da movimentação
+     * @return {@code true} se a operação foi bem-sucedida, {@code false} caso
+     * contrário
+     */
     public boolean RegistrarEntradaProduto(int produtoId, int quantidadeEntrada, String observacao) {
         Conexao conexao = new Conexao();
 
@@ -320,7 +409,16 @@ public class ProdutoDAO {
         }
     }
 
-
+    /**
+     * Registra a saída de um produto do estoque e grava a movimentação no banco
+     * de dados.
+     *
+     * @param produtoId ID do produto
+     * @param quantidadeSaida quantidade removida
+     * @param observacao observação opcional da movimentação
+     * @return {@code true} se a operação foi bem-sucedida, {@code false} caso
+     * contrário
+     */
     public boolean RegistrarSaidaProduto(int produtoId, int quantidadeSaida, String observacao) {
         Conexao conexao = new Conexao();
         Produto produto = ProcurarProdutoID(produtoId);
