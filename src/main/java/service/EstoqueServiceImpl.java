@@ -12,7 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import modelo.RegistroMovimentacao;
 
-public class EstoqueServiceImpl extends UnicastRemoteObject implements EstoqueService, ProdutoService, CategoriaService, MovimentacaoService {
+public class EstoqueServiceImpl extends UnicastRemoteObject
+        implements ProdutoService, CategoriaService, MovimentacaoService {
 
     private final ProdutoDAO produtoDAO = new ProdutoDAO();
     private final CategoriaDAO categoriaDAO = new CategoriaDAO();
@@ -22,8 +23,7 @@ public class EstoqueServiceImpl extends UnicastRemoteObject implements EstoqueSe
         super();
     }
 
-    // ========== IMPLEMENTAÇÃO DE ProdutoService ==========
-
+    // ========== MÉTODOS DE PRODUTO ==========
     @Override
     public void salvarProduto(Produto produto) throws RemoteException {
         try {
@@ -36,7 +36,6 @@ public class EstoqueServiceImpl extends UnicastRemoteObject implements EstoqueSe
         }
     }
 
-    // MÉTODO CORRIGIDO - MANTIDO O NOME ORIGINAL
     @Override
     public boolean DeletarProdutoID(int idProduto) throws RemoteException {
         try {
@@ -110,8 +109,7 @@ public class EstoqueServiceImpl extends UnicastRemoteObject implements EstoqueSe
         }
     }
 
-    // ========== IMPLEMENTAÇÃO DE CategoriaService ==========
-
+    // ========== MÉTODOS DE CATEGORIA ==========
     @Override
     public void salvarCategoria(Categoria categoria) throws RemoteException {
         try {
@@ -139,8 +137,7 @@ public class EstoqueServiceImpl extends UnicastRemoteObject implements EstoqueSe
         }
     }
 
-    // ========== IMPLEMENTAÇÃO DE MovimentacaoService ==========
-
+    // ========== MÉTODOS DE MOVIMENTAÇÃO ==========
     @Override
     public List<RegistroMovimentacao> listarMovimentacoes() throws RemoteException {
         try {
