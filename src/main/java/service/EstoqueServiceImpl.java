@@ -36,7 +36,7 @@ import modelo.RegistroMovimentacao;
  * @see CategoriaDAO
  * @see RegistroMovimentacaoDAO
  */
-public class EstoqueServiceImpl extends UnicastRemoteObject implements EstoqueService, ProdutoService, CategoriaService, MovimentacaoService {
+public class EstoqueServiceImpl extends UnicastRemoteObject implements ProdutoService, CategoriaService, MovimentacaoService {
 
     /**
      * DAO responsável pela manipulação dos dados de produtos.
