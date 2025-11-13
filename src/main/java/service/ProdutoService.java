@@ -27,7 +27,6 @@ import modelo.Produto;
  * @author Hector
  * @version 1.0
  * @see modelo.Produto
- * @see service.EstoqueService
  */
 public interface ProdutoService extends Remote {
 

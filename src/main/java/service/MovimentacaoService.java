@@ -25,7 +25,6 @@ import modelo.RegistroMovimentacao;
  * @author Hector
  * @version 1.0
  * @see modelo.RegistroMovimentacao
- * @see service.EstoqueService
  */
 public interface MovimentacaoService extends Remote {
 

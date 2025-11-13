@@ -21,7 +21,6 @@ import java.rmi.registry.Registry;
  *
  * @author Hector
  * @version 1.0
- * @see EstoqueService
  * @see EstoqueServiceImpl
  */
 public class Servidor {

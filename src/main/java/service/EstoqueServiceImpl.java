@@ -28,7 +28,6 @@ import modelo.RegistroMovimentacao;
  *
  * Implementa as interfaces:
  * {@link ProdutoService}, {@link CategoriaService}, {@link MovimentacaoService}
- * e {@link EstoqueService}.
  *
  * @author Hector
  * @version 1.0
